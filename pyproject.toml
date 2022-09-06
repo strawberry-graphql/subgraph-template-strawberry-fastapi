@@ -1,28 +1,22 @@
 [project]
-name = ""
-version = ""
+authors = []
 description = ""
-authors = [
-    {name = "Patrick Arminio", email = "patrick.arminio@gmail.com"},
-]
-dependencies = [
-    "strawberry-graphql>=0.127.3",
-    "fastapi>=0.81.0",
-    "uvicorn>=0.18.3",
-]
-requires-python = ">=3.10"
-license = {text = "MIT"}
-[project.optional-dependencies]
+name = ""
+requires-python = ">=3.7"
+version = ""
 
-[build-system]
-requires = ["pdm-pep517>=1.0.0"]
-build-backend = "pdm.pep517.api"
+[tool.black]
+line-length = 88
 
-[tool]
-[tool.pdm]
-[tool.pdm.dev-dependencies]
-dev = [
-    "black>=22.6.0",
-    "pytest>=7.1.2",
-    "requests>=2.28.1",
-]
+[tool.isort]
+combine_as_imports = true
+combine_star = true
+indent = 4
+known_pytest = ["pytest"]
+known_strawberry = ["strawberry"]
+lines_after_imports = 2
+profile = "black"
+sections = ["FUTURE", "STDLIB", "PYTEST", "THIRDPARTY", "STRAWBERRY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.mypy]
+plugin = ["strawberry.ext.mypy_plugin"]
