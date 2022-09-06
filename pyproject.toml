@@ -19,4 +19,4 @@ profile = "black"
 sections = ["FUTURE", "STDLIB", "PYTEST", "THIRDPARTY", "STRAWBERRY", "FIRSTPARTY", "LOCALFOLDER"]
 
 [tool.mypy]
-plugin = ["strawberry.ext.mypy_plugin"]
+plugins = ["strawberry.ext.mypy_plugin"]
