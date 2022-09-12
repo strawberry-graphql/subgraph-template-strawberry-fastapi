@@ -1,0 +1,43 @@
+name: Check Schema with Apollo Studio
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
+  APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+  APOLLO_GRAPH_NAME: ${{ secrets.APOLLO_GRAPH_NAME }}
+  APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@current
+  SUBGRAPH_NAME: foo-bar
+
+jobs:
+  check-schema:
+    name: Check schema with Apollo Studio
+    runs-on: ubuntu-latest
+    environment: apollo
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Export schema
+        run: |
+          strawberry export-schema api.schema > schema.graphql
+      - name: Install Rover
+        run: |
+          curl -sSL https://rover.apollo.dev/nix/latest | sh
+          echo "$HOME/.rover/bin" >> $GITHUB_PATH
+      - name: Check new schema with Apollo Studio
+        if: env.APOLLO_KEY != ''&& env.APOLLO_GRAPH_NAME != ''
+        run: |
+          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ./schema.graphql --name ${{ env.SUBGRAPH_NAME }}
+      - name: No Apollo Studio Api Key is set
+        if: env.APOLLO_KEY == ''
+        run: echo "::warning file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No Apollo Studio Api Key is set in repository. Set this in the repository secrets under APOLLO_KEY"
+      - name: No Apollo Studio Graph Name is set
+        if: env.APOLLO_GRAPH_NAME == ''
+        run: echo "::warning file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No Apollo Studio Graph Name is set in repository. Set this in the repository secrets under APOLLO_GRAPH_NAME"

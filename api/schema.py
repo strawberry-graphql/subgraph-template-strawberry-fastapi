@@ -42,6 +42,7 @@ class Mutation:
 schema = strawberry.federation.Schema(
     Query,
     Mutation,
+    enable_federation_2=True,
     schema_directives=[
         Contact(
             name="FooBar Server Team",
