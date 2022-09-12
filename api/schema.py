@@ -21,8 +21,8 @@ class Foo:
     name: Optional[str]
 
     @classmethod
-    def resolve_reference(cls, representation: dict) -> "Foo":
-        return cls(id=strawberry.ID("1"), name="Foo")
+    def resolve_reference(cls, **representation: dict) -> "Foo":
+        return cls(id=representation["id"], name="Foo")
 
 
 @strawberry.type
@@ -47,7 +47,10 @@ schema = strawberry.federation.Schema(
         Contact(
             name="FooBar Server Team",
             url="https://myteam.slack.com/archives/teams-chat-room-url",
-            description="send urgent issues to [#oncall](https://yourteam.slack.com/archives/oncall).",
+            description=(
+                "send urgent issues to [#oncall]"
+                "(https://yourteam.slack.com/archives/oncall)."
+            ),
         )
     ],
 )
