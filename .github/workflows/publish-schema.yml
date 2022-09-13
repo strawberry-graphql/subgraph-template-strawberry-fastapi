@@ -15,23 +15,17 @@ env:
   ROUTING_URL: ${{ secrets.PRODUCTION_URL }}
 
 jobs:
+  test-and-check-schema:
+    name: Test and check schema
+    uses: ./.github/workflows/check-schema.yml
+
   publish-schema:
+    needs: [test-and-check-schema]
     name: Publish schema on Apollo Studio
     runs-on: ubuntu-latest
     environment: apollo
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Export schema
-        run: |
-          strawberry export-schema api.schema > schema.graphql
       - name: Install Rover
         run: |
           curl -sSL https://rover.apollo.dev/nix/latest | sh
@@ -39,7 +33,7 @@ jobs:
       - name: Publish your schema to registry
         if: ${{ env.APOLLO_KEY != '' }} &&  $ {{ secrets.APOLLO_GRAPH_NAME != ''}}
         run: |
-          rover subgraph publish ${{ env.APOLLO_GRAPH_REF }} --name=${{ env.SUBGRAPH_NAME }} --schema=./schema.graphql --routing-url=${{ env.ROUTING_URL }}
+          rover subgraph publish ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-check-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }} --routing-url=${{ env.ROUTING_URL }}
       - name: No Apollo Studio Api Key is set
         if: env.APOLLO_KEY == ''
         run: echo "::warning file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No Apollo Studio Api Key is set in repository. Set this in the repository secrets under APOLLO_KEY"
