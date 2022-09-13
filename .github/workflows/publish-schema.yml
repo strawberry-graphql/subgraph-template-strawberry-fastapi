@@ -18,6 +18,7 @@ jobs:
   test-and-check-schema:
     name: Test and check schema
     uses: ./.github/workflows/check-schema.yml
+    secrets: inherit
 
   publish-schema:
     needs: [test-and-check-schema]
