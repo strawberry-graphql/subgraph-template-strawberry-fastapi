@@ -38,18 +38,18 @@ jobs:
           curl -sSL https://rover.apollo.dev/nix/latest | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Check new schema with Apollo Studio
-        if: env.APOLLO_KEY != ''&& env.APOLLO_GRAPH_NAME != ''
+        if: secrets.APOLLO_KEY != ''&& secrets.APOLLO_GRAPH_NAME != ''
         run: |
-          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }}
+          rover subgraph check ${{ secrets.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ secrets.SUBGRAPH_NAME }}
       - name: No Apollo Studio Api Key is set
-        if: env.APOLLO_KEY == ''
+        if: secrets.APOLLO_KEY == ''
         run:
           echo "::warning
           file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No
           Apollo Studio Api Key is set in repository. Set this in the repository
           secrets under APOLLO_KEY"
       - name: No Apollo Studio Graph Name is set
-        if: env.APOLLO_GRAPH_NAME == ''
+        if: secrets.APOLLO_GRAPH_NAME == ''
         run:
           echo "::warning
           file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No
