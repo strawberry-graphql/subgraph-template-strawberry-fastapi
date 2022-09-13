@@ -11,6 +11,11 @@ on:
       schema_artifact:
         description: "Name of the artifact to download to get the schema"
         value: ${{ jobs.test-and-export-schema.outputs.schema_artifact }}
+    secrets:
+      APOLLO_GRAPH_NAME:
+        required: false
+      APOLLO_KEY:
+        required: false
 
 env:
   APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
