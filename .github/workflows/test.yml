@@ -5,10 +5,10 @@ on:
     outputs:
       schema:
         description: "Name of the schema file from the artifact"
-        value: ${{ jobs.get_schema.outputs.schema }}
+        value: ${{ jobs.test.outputs.schema }}
       schema_artifact:
         description: "Name of the artifact to download to get the schema"
-        value: ${{ jobs.get_schema.outputs.schema_artifact }}
+        value: ${{ jobs.test.outputs.schema_artifact }}
 
 jobs:
   test:

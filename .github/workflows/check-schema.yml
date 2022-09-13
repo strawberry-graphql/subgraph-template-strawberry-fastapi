@@ -7,10 +7,10 @@ on:
     outputs:
       schema:
         description: "Name of the schema file from the artifact"
-        value: ${{ jobs.get_schema.outputs.schema }}
+        value: ${{ jobs.test-and-export-schema.outputs.schema }}
       schema_artifact:
         description: "Name of the artifact to download to get the schema"
-        value: ${{ jobs.get_schema.outputs.schema_artifact }}
+        value: ${{ jobs.test-and-export-schema.outputs.schema_artifact }}
 
 env:
   APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
@@ -26,9 +26,6 @@ jobs:
 
   check-schema:
     needs: [test-and-export-schema]
-    outputs:
-      schema: ${{ needs.test-and-export-schema.outputs.schema }}
-      schema_artifact: ${{ needs.test-and-export-schema.outputs.schema_artifact }}
     name: Check schema with Apollo Studio
     runs-on: ubuntu-latest
     environment: apollo
@@ -43,7 +40,7 @@ jobs:
       - name: Check new schema with Apollo Studio
         if: env.APOLLO_KEY != ''&& env.APOLLO_GRAPH_NAME != ''
         run: |
-          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.prepare_schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }}
+          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }}
       - name: No Apollo Studio Api Key is set
         if: env.APOLLO_KEY == ''
         run:
