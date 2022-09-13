@@ -27,8 +27,8 @@ jobs:
   check-schema:
     needs: [test-and-export-schema]
     outputs:
-      schema: ${{ test-and-export-schema.outputs.schema }}
-      schema_artifact: ${{ test-and-export-schema.outputs.schema_artifact }}
+      schema: ${{ needs.test-and-export-schema.outputs.schema }}
+      schema_artifact: ${{ needs.test-and-export-schema.outputs.schema_artifact }}
     name: Check schema with Apollo Studio
     runs-on: ubuntu-latest
     environment: apollo
