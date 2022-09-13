@@ -12,13 +12,6 @@ on:
         description: "Name of the artifact to download to get the schema"
         value: ${{ jobs.test-and-export-schema.outputs.schema_artifact }}
 
-env:
-  APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
-  APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
-  APOLLO_GRAPH_NAME: ${{ secrets.APOLLO_GRAPH_NAME }}
-  APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@current
-  SUBGRAPH_NAME: foo-bar
-
 jobs:
   test-and-export-schema:
     name: Test and export schema
@@ -29,6 +22,12 @@ jobs:
     name: Check schema with Apollo Studio
     runs-on: ubuntu-latest
     environment: apollo
+    env:
+      APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
+      APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
+      APOLLO_GRAPH_NAME: ${{ secrets.APOLLO_GRAPH_NAME }}
+      APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@current
+      SUBGRAPH_NAME: foo-bar
     steps:
       - uses: actions/download-artifact@v3
         with:
@@ -38,18 +37,18 @@ jobs:
           curl -sSL https://rover.apollo.dev/nix/latest | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Check new schema with Apollo Studio
-        if: secrets.APOLLO_KEY != ''&& secrets.APOLLO_GRAPH_NAME != ''
+        if: env.APOLLO_KEY != ''&& env.APOLLO_GRAPH_NAME != ''
         run: |
-          rover subgraph check ${{ secrets.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ secrets.SUBGRAPH_NAME }}
+          rover subgraph check ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }}
       - name: No Apollo Studio Api Key is set
-        if: secrets.APOLLO_KEY == ''
+        if: env.APOLLO_KEY == ''
         run:
           echo "::warning
           file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No
           Apollo Studio Api Key is set in repository. Set this in the repository
           secrets under APOLLO_KEY"
       - name: No Apollo Studio Graph Name is set
-        if: secrets.APOLLO_GRAPH_NAME == ''
+        if: env.APOLLO_GRAPH_NAME == ''
         run:
           echo "::warning
           file=.github/workflows/publish-schema.yml,line=13,col=1,endColumn=1::No
