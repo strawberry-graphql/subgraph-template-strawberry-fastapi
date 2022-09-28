@@ -9,10 +9,6 @@ on:
 env:
   APOLLO_VCS_COMMIT: ${{ github.event.pull_request.head.sha }}
   APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
-  APOLLO_GRAPH_NAME: ${{ secrets.APOLLO_GRAPH_NAME }}
-  APOLLO_GRAPH_REF: ${{ secrets.APOLLO_GRAPH_NAME }}@current
-  SUBGRAPH_NAME: foo-bar
-  ROUTING_URL: ${{ secrets.PRODUCTION_URL }}
 
 jobs:
   test-and-check-schema:
@@ -36,4 +32,4 @@ jobs:
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Publish your schema to registry
         run: |
-          rover subgraph publish ${{ env.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-check-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }} --routing-url=${{ env.ROUTING_URL }}
+          rover subgraph publish ${{ secrets.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-check-schema.outputs.schema }} --name ${{ secrets.SUBGRAPH_NAME }} --routing-url=${{ secrets.ROUTING_URL }}

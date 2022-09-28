@@ -47,9 +47,11 @@ add the following secrets to your repository:
 
 - `APOLLO_KEY`: An Apollo Studio API key for the supergraph to enable schema
   checks and publishing of the subgraph.
-- `APOLLO_GRAPH_REF`: The name of the supergraph in Apollo Studio.
+- `APOLLO_GRAPH_REF`: The name of the graph in Apollo Studio to publish the
+  subgraph to. This should be in the format `graph-name@variant-name`.
 - `PRODUCTION_URL`: The URL of the deployed subgraph that the supergraph gateway
   will route to.
+- `SUBGRAPH_NAME`: The name of the subgraph in Apollo Studio.
 
 And remove the `if: false` from the `publish` step in the `publish-schema.yml`
 and `check-schema.yml` workflows.
