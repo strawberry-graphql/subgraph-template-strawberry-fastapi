@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict
 import strawberry
 
 from strawberry.schema_directive import Location
@@ -16,20 +16,22 @@ class Contact:
 
 
 @strawberry.federation.type(keys=["id"])
-class Foo:
+class Thing:
     id: strawberry.ID
     name: Optional[str]
 
     @classmethod
-    def resolve_reference(cls, **representation: dict) -> "Foo":
-        return cls(id=representation["id"], name="Foo")
+    def resolve_reference(cls, **representation) -> "Thing":
+        id_ = strawberry.ID(representation["id"])
+
+        return cls(id=id_, name="Thing")
 
 
 @strawberry.type
 class Query:
     @strawberry.field
-    def foo(self, id: strawberry.ID) -> Optional[Foo]:
-        return Foo(id=id, name="Foo")
+    def thing(self, id: strawberry.ID) -> Optional[Thing]:
+        return Thing(id=id, name="Thing")
 
 
 @strawberry.type
