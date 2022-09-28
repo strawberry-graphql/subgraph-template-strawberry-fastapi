@@ -47,7 +47,7 @@ schema = strawberry.federation.Schema(
     enable_federation_2=True,
     schema_directives=[
         Contact(
-            name="FooBar Server Team",
+            name="Server Team",
             url="https://myteam.slack.com/archives/teams-chat-room-url",
             description=(
                 "send urgent issues to [#oncall]"

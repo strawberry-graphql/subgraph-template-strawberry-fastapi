@@ -13,11 +13,11 @@ on:
         value: ${{ jobs.test-and-export-schema.outputs.schema_artifact }}
     secrets:
       APOLLO_GRAPH_REF:
-        required: false
+        required: true
       APOLLO_KEY:
-        required: false
+        required: true
       SUBGRAPH_NAME:
-        required: false
+        required: true
 
 env:
   APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
