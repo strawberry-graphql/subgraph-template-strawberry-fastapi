@@ -3,7 +3,7 @@ authors = []
 description = ""
 name = "api"
 requires-python = ">=3.7"
-version = ""
+version = "0.1.0"
 
 [tool.black]
 line-length = 88
