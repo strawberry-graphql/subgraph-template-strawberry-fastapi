@@ -12,13 +12,15 @@ on:
         description: "Name of the artifact to download to get the schema"
         value: ${{ jobs.test-and-export-schema.outputs.schema_artifact }}
     secrets:
-      APOLLO_GRAPH_NAME:
+      APOLLO_GRAPH_REF:
         required: false
       APOLLO_KEY:
         required: false
+      SUBGRAPH_NAME:
+        required: false
 
 env:
-  SUBGRAPH_NAME: foo-bar
+  APOLLO_KEY: ${{ secrets.APOLLO_KEY }}
 
 jobs:
   test-and-export-schema:
@@ -41,4 +43,4 @@ jobs:
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
       - name: Check new schema with Apollo Studio
         run: |
-          rover subgraph check ${{ secrets.APOLLO_GRAPH_NAME }}@current --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ env.SUBGRAPH_NAME }}
+          rover subgraph check ${{ secrets.APOLLO_GRAPH_REF }} --schema ${{ needs.test-and-export-schema.outputs.schema }} --name ${{ secrets.SUBGRAPH_NAME }}
