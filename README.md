@@ -36,7 +36,7 @@ pip install -r requirements.txt -r requirements-dev.txt
 To run the server, run:
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 
 ## Apollo Studio Configuration
