@@ -24,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-graphql_app = GraphQLRouter(schema, path="/")
+graphql_app = GraphQLRouter[None, None](schema, path="/", graphql_ide="apollo-sandbox")
 
 app.include_router(graphql_app)
 
